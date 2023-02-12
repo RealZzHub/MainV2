@@ -1,4 +1,4 @@
-{
+return {
     {
         Name = "Default",
         Background = "rbxassetid://7877641241",
