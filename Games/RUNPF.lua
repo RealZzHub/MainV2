@@ -1,6 +1,7 @@
 if not syn then -- Phantom Forces uses Actors but we bypass B), modified v3rm find (wont take credit)
 	local zzLPlayer = game:GetService("Players").LocalPlayer
 	local zzTeleportService = game:GetService("TeleportService")
+	local zzWorkspace = game:GetService("Workspace")
 	local queue_on_teleport = queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
 	queue_on_teleport([[
 		local zzWorkspace = game:GetService("Workspace")
