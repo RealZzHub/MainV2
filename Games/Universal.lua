@@ -1,7 +1,3 @@
--- soon to be rewriten
-
-
-
 -- Settings --
 local Settings = {
     Visuals = {
@@ -111,6 +107,8 @@ function IsVisible(Pos, List)
     return #zzCamera:GetPartsObscuringTarget({zzLPlayer.Character.Head.Position, Pos}, List) == 0 and true or false
 end
 
+local Aiming = false
+
 function getTarget()
     local Mag = math.huge
     local plr = nil
@@ -133,31 +131,27 @@ function getTarget()
     return plr 
 end
 
-local Aiming = false
-
 local AimPlayer = getTarget()
 zzRunService.RenderStepped:Connect(function()
     local MousePos = zzUIS:GetMouseLocation()
     FOV.Position = Vector2.new(MousePos.X, MousePos.Y)
-    
-    AimPlayer = getTarget()
-    if Aiming and Settings.Aimbot.AimbotUsed then
-        if AimPlayer then
-            local Pos = zzCamera:WorldToViewportPoint(AimPlayer.Character[GetPart(AimPlayer.Character)].Position)
-            mousemoverel((Pos.X - MousePos.X) / Settings.Aimbot.SmoothnessX, (Pos.Y - MousePos.Y) / Settings.Aimbot.SmoothnessY)
-        end
+    if Aiming and Settings.Aimbot.AimbotUsed and AimPlayer ~= nil then
+        local Pos = zzCamera:WorldToViewportPoint(AimPlayer.Character[GetPart(AimPlayer.Character)].Position)
+        mousemoverel((Pos.X - MousePos.X) / Settings.Aimbot.SmoothnessX, (Pos.Y - MousePos.Y) / Settings.Aimbot.SmoothnessY)
     end
 end)
 
 zzUIS.InputEnded:Connect(function(v)
     if v.KeyCode == Settings.Aimbot.AimbotKey or v.UserInputType == Settings.Aimbot.AimbotKey then
         Aiming = false
+        AimPlayer = nil
     end
 end)
 
 zzUIS.InputBegan:Connect(function(v)
     if v.KeyCode == Settings.Aimbot.AimbotKey or v.UserInputType == Settings.Aimbot.AimbotKey then
         Aiming = true
+        AimPlayer = getTarget()
     end
 end)
 
@@ -201,7 +195,7 @@ function StartESP(plr)
 
     local Run
     Run = zzRunService.RenderStepped:Connect(function()
-        if plr.Character ~= nil and plr.Character:FindFirstChild("HumanoidRootPart") and zzLPlayer ~= plr and plr then
+        if plr.Character ~= nil and plr.Character:FindFirstChild("HumanoidRootPart") and plr.Character:FindFirstChild("Head") and zzLPlayer ~= plr and plr then
             if Settings.Visuals.Distance or Settings.Visuals.Name or Settings.Visuals.Esp or Settings.Visuals.Tracer then
            local _, onScreen = zzCamera:WorldToViewportPoint(plr.Character.HumanoidRootPart.Position)
 
